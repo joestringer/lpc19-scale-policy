@@ -1,4 +1,4 @@
-TITLE=lpc18-sk-lookup
+TITLE=lpc19-scale-policy
 PAPER=$(TITLE).pdf
 SLIDES=$(TITLE)-slides.pdf
 

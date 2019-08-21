@@ -1,33 +1,11 @@
-\documentclass[10pt,sigconf,authorversion]{lpc}
-\usepackage{balance}
-\usepackage{courier}
-\usepackage{helvet}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{listings}
-\usepackage{times}
-\usepackage{xcolor}
+# Scaling container policy management with kernel features
 
-\pdfinfo{
-/Title (Scaling container policy management with kernel features)
-/Author (Joe Stringer)}
+[In Proceedings](https://linuxplumbersconf.org/event/4/contributions/464/) of
+[Linux Plumbers Conference 2019](https://linuxplumbersconf.org/), Lisbon, Portugal.
 
-\title{Scaling container policy management with kernel features}
-\author{Joe Stringer}
-\affiliation{%
-      \institution{Cilium.io}}
-\email{joe@cilium.io}
+[Full PDF](https://github.com/joestringer/lpc19-scale-policy/blob/master/lpc19-scale-policy.pdf)
 
-\acmDOI{}
-\setcounter{secnumdepth}{0}
-\setcopyright{none}
-
-\usepackage{xcolor}
-\newcommand\todo[1]{\textcolor{red}{#1}}
-
-\begin{document}
-
-\begin{abstract}
+## Abstract
 
 Cilium is an open source project which implements the Container Network
 Interface (CNI) to provide networking and security functions in modern
@@ -58,21 +36,3 @@ whitelist filtering of requests at layers 3, 4 and 7; memoization techniques
 used to cache intermediate policy computation artifacts; and impacts on
 dataplane design and kernel features when considering large container based
 deployments with high rates of change in cluster state.
-
-\end{abstract}
-
-\maketitle
-
-\section{Keywords}
-
-BPF, Linux, packet processing, sockets
-
-\section{Introduction}
-
-\section{Acknowledgments}
-
-
-\bibliographystyle{plainnat}
-\bibliography{paper}
-
-\end{document}
