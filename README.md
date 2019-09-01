@@ -36,3 +36,19 @@ whitelist filtering of requests at layers 3, 4 and 7; memoization techniques
 used to cache intermediate policy computation artifacts; and impacts on
 dataplane design and kernel features when considering large container based
 deployments with high rates of change in cluster state.
+
+## Build Dependencies
+
+On Debian-based systems (including Ubuntu):
+
+`$ sudo apt install texlive texlive-latex-extra inkscape`
+
+## Building & Previewing
+
+To build the PDFs:
+
+`$ make`
+
+Or, to build & open automatically:
+
+`$ make open`
