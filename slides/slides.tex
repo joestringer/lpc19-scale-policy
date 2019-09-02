@@ -51,7 +51,7 @@
 \let\oldhash\#%
 \DeclareRobustCommand{\#}{\adjustbox{valign=B,totalheight=.57\baselineskip}{\oldhash}}%
 
-\title[Scaling container policy with eBPF]{Scaling container policy management with kernel features}
+\title[Scaling container policy with eBPF]{Scaling container policy management\newline with kernel features}
 \institute{Cilium.io}
 \author[Joe Stringer]{Joe Stringer}
 
@@ -73,7 +73,6 @@
 }
 
 \newcommand\newsectionpage[1]{
-    \section{}
     {\sectioncolor
         \begin{frame}
             \vfill
@@ -85,7 +84,6 @@
             \vfill
         \end{frame}
     }
-    \section{#1}
 }
 
 \newcommand\suspense{
@@ -114,12 +112,10 @@ import{../sw-l3-l4-policy.yaml}
 
     %\logo{\includesvg[scale=0.4]{cilium-logo.svg}}
 
-    \begin{frame}{Agenda}
-        \begin{itemize}
-            \item Architecture \medskip
-            \item Policy model \medskip
-            \item Datapath model \medskip
-        \end{itemize}
+    \section{Background}
+
+    \begin{frame}{Overview}
+        \tableofcontents
     \end{frame}
 
     \begin{frame}{Kubernetes Architecture 101}
@@ -156,7 +152,8 @@ import{../sw-l3-l4-policy.yaml}
         \vfill
         \begin{table}
             \begin{subtable}[l]{0.45\textwidth}
-                \begin{itemize} \item Native BPF dataplane \medskip
+                \begin{itemize}
+                    \item Native BPF dataplane \medskip
                     \item Modular architecture \medskip
                     \item API-Aware security model \medskip
                     \item Scalable \medskip
@@ -174,59 +171,44 @@ import{../sw-l3-l4-policy.yaml}
 
     \begin{frame}{Cluster events}
         \begin{itemize}
-            \item Nodes $\rightarrow$ Fabric connectivity \medskip \pause
-            \item Pods $\rightarrow$ End-to-end connectivity \medskip \pause
-            \item Services $\rightarrow$ Logical connectivity \medskip \pause
-            \item Network policies $\rightarrow$ Connectivity isolation \medskip
-        \end{itemize}
-    \end{frame}
-
-    \begin{frame}{Cluster events}
-        \begin{itemize}
             \item Nodes $\rightarrow$ Fabric connectivity \medskip
-		    \item \textbf{Pods} $\rightarrow$ End-to-end connectivity \medskip
+            \pause
+            \item \textbf<5>{Pods} $\rightarrow$ End-to-end connectivity \medskip
+            \pause
             \item Services $\rightarrow$ Logical connectivity \medskip
-            \item \textbf{Network policies} $\rightarrow$ Connectivity isolation \medskip
+            \pause
+            \item \textbf<5>{Network policies} $\rightarrow$ Connectivity isolation \medskip
         \end{itemize}
     \end{frame}
 
-    \begin{frame}{Pods}
-        \begin{itemize}
-            \item BPF Templating \medskip
-        \end{itemize}
+    \newsectionpage{Pod event processing}
+    %\begin{frame}{Pods}
+    %    \begin{itemize}
+    %        \item N plumbing events for N pods \smallskip
+    %            \begin{itemize}
+    %                \item Optimize for speed\medskip
+    %            \end{itemize}
+    %        \pause
+    %        \item BPF Templating \medskip
+    %    \end{itemize}
+    %\end{frame}
+
+    \begin{frame}{Cilium Architecture}
+        \centering
+        \includegraphics[width=0.8\textwidth,keepaspectratio]{cilium_architecture.png}
     \end{frame}
 
     \begin{frame}{ELF Templating}
         \centering
-        \includesvg[scale=0.9]{bpf-templating.svg}
+        \includesvg[width=\textwidth]{bpf-templating.svg}
     \end{frame}
 
-    \begin{frame}{Policy}
+    \begin{frame}{1K nodes: Scaling to 60k pods}
+        \centering
+        \includegraphics[width=0.8\textwidth]{scaling_to_60k_pods.png}
     \end{frame}
 
-    %    \begin{itemize}
-    %        \item Nodes \suspense Fabric connectivity \smallskip
-    %            \pause
-    %            \begin{itemize}
-    %                \item Tunnel / Encryption / Direct routing \medskip
-    %            \end{itemize}
-    %            \pause
-    %        \item Pods \suspense End-to-end connectivity \smallskip
-    %            \pause
-    %            \begin{itemize}
-    %                \item Configure local kernel for new network namespace \medskip
-    %                \item Allocate identity for pod labels \medskip
-    %            \end{itemize}
-    %            \pause
-    %        \item Services \suspense Logical connectivity \smallskip
-    %            \pause
-    %            \begin{itemize}
-    %                \item Configure service translation \medskip
-    %            \end{itemize}
-    %            \pause
-    %        \item Network policies \suspense Connectivity isolation \medskip
-    %    \end{itemize}
-    %\end{frame}
+    \newsectionpage{Identity-based Security Policy}
 
     %\begin{frame}{Policy model}
     %    \begin{itemize}
@@ -247,16 +229,11 @@ import{../sw-l3-l4-policy.yaml}
     %    \end{itemize}
     %\end{frame}
 
-    \begin{frame}{Cilium Architecture}
-        \centering
-        \includegraphics[width=0.8\textwidth,keepaspectratio]{cilium_architecture.png}
-    \end{frame}
-
     \begin{frame}{Identity-based security}
         \centering
         \vfill
         \begin{figure}
-            \includesvg[scale=0.7]{identity-security.svg}
+            \includesvg[width=\textwidth]{identity-security.svg}
         \end{figure}
         \vfill
         \blfootnote{{\tiny Thomas Graf, {\em Cilium \& BPF - The Future of Networking and Security}, openSUSE Conference 2019}}
@@ -280,14 +257,16 @@ import{../sw-l3-l4-policy.yaml}
     \begin{frame}{... memoization something something ...}
     \end{frame}
 
+    \newsectionpage{Layer 7 Policy}
+
     \begin{frame}{Datapath Configuration}
         \centering
         \vfill
         \begin{figure}
         \begin{overprint}
-            \onslide<1>\includesvg[scale=0.9]{cilium-bpf-egress-l3.svg}
-            \onslide<2>\includesvg[scale=0.9]{cilium-bpf-egress-l7.svg}
-            \onslide<3>\includesvg[scale=0.9]{cilium-bpf-egress-proxy.svg}
+            \onslide<1>\includesvg[width=0.9\textwidth]{cilium-bpf-egress-l3.svg}
+            \onslide<2>\includesvg[width=0.9\textwidth]{cilium-bpf-egress-l7.svg}
+            \onslide<3>\includesvg[width=0.9\textwidth]{cilium-bpf-egress-proxy.svg}
         \end{overprint}
         \end{figure}
         \vfill
@@ -301,10 +280,10 @@ import{../sw-l3-l4-policy.yaml}
         \begin{figure}
         \begin{overprint}
             \centering
-            \onslide<1>\includesvg[scale=0.8]{bpf-proxy-nat-0.svg}
-            \onslide<2>\includesvg[scale=0.8]{bpf-proxy-nat-1.svg}
-            \onslide<3>\includesvg[scale=0.8]{bpf-proxy-nat-2.svg}
-            \onslide<4>\includesvg[scale=0.8]{bpf-proxy-nat-3.svg}
+            \onslide<1>\includesvg[width=0.9\textwidth]{bpf-proxy-nat-0.svg}
+            \onslide<2>\includesvg[width=0.9\textwidth]{bpf-proxy-nat-1.svg}
+            \onslide<3>\includesvg[width=0.9\textwidth]{bpf-proxy-nat-2.svg}
+            \onslide<4>\includesvg[width=0.9\textwidth]{bpf-proxy-nat-3.svg}
         \end{overprint}
         \end{figure}
         \vfill
