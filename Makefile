@@ -6,17 +6,16 @@ XDG_OPEN ?= xdg-open
 all: $(PAPER) $(SLIDES)
 
 $(PAPER):
+	rm -f $(PAPER)
 	$(MAKE) -C paper/
 	mv paper/paper.pdf $(PAPER)
 
 paper: $(PAPER)
 
-slides/slides.pdf:
-	$(MAKE) -C slides
-
-$(SLIDES): slides/slides.pdf
+$(SLIDES):
 	rm -f $(SLIDES)
-	mv slides/slides.pdf $(SLIDES)
+	$(MAKE) -C slides
+	cp slides/slides.pdf $(SLIDES)
 
 slides: $(SLIDES)
 
