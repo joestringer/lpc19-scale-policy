@@ -181,20 +181,12 @@ import{../sw-l3-l4-policy.yaml}
         \end{itemize}
     \end{frame}
 
-    \begin{frame}{Nodes}
+    \begin{frame}{Cluster events}
         \begin{itemize}
-            \item Pull cluster info \medskip
-            %\begin{itemize}
-            %    \item Node addressing \medskip
-            %    \item CIDR ranges \medskip
-            %\end{itemize}
-            \item Initialize IPAM \medskip
-            \item Configure node-level access\medskip
-            %\begin{itemize}
-            %    \item Tunnels \medskip
-            %    \item Masquerade \medskip
-            %\end{itemize}
-            %\item Building BPF templates
+            \item Nodes $\rightarrow$ Fabric connectivity \medskip
+		    \item \textbf{Pods} $\rightarrow$ End-to-end connectivity \medskip
+            \item Services $\rightarrow$ Logical connectivity \medskip
+            \item \textbf{Network policies} $\rightarrow$ Connectivity isolation \medskip
         \end{itemize}
     \end{frame}
 
@@ -204,10 +196,9 @@ import{../sw-l3-l4-policy.yaml}
         \end{itemize}
     \end{frame}
 
-    \begin{frame}{Services}
-        \begin{itemize}
-            \item See Martynas/Daniel's talk yesterday \medskip
-        \end{itemize}
+    \begin{frame}{ELF Templating}
+        \centering
+        \includesvg[scale=0.9]{bpf-templating.svg}
     \end{frame}
 
     \begin{frame}{Policy}
