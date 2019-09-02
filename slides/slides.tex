@@ -94,10 +94,6 @@
 
 \date[Sep 11, 2019]{Linux Plumbers 2019, Lisbon, Portugal}
 
-%\begin{filecontents*}{../label-selector.go}
-%import{../label-selector.go}
-%\end{filecontents*}
-
 \begin{filecontents*}{../sw-l3-l4-policy.yaml}
 import{../sw-l3-l4-policy.yaml}
 \end{filecontents*}
@@ -126,6 +122,7 @@ import{../sw-l3-l4-policy.yaml}
         \begin{figure}
             \includesvg[width=0.8\textwidth,keepaspectratio]{k8s-architecture.svg}
         \end{figure}
+        \vfill
         \blfootnote{{\tiny Thomas Graf, {\em Scaling to 5k Kubernetes Nodes: Lessons Learned}, Cloud Native Rejekts EU 2019}}
     \end{frame}
 
@@ -212,33 +209,26 @@ import{../sw-l3-l4-policy.yaml}
 
     \newsectionpage{Identity-based security}
 
-    %\begin{frame}{Policy model}
-    %    \begin{itemize}
-    %        \item Whitelist \medskip
-    %        \item L3 \smallskip
-    %            \begin{itemize}
-    %                \item Pod labels \medskip
-    %                \item FQDN \medskip
-    %                \item Services \medskip
-    %            \end{itemize}
-    %        \item L4 \medskip
-    %        \item L7 \smallskip
-    %            \begin{itemize}
-    %                \item HTTP \medskip
-    %                \item DNS \medskip
-    %                \item Your protocol here \medskip
-    %            \end{itemize}
-    %    \end{itemize}
-    %\end{frame}
-
-    \begin{frame}{Identity-based security}
-        \centering
-        \vfill
-        \begin{figure}
-            \includesvg[width=\textwidth]{identity-security.svg}
-        \end{figure}
-        \vfill
-        \blfootnote{{\tiny Thomas Graf, {\em Cilium \& BPF - The Future of Networking and Security}, openSUSE Conference 2019}}
+    \begin{frame}{Policy model}
+        \begin{itemize}
+            \item Whitelist \medskip
+            \pause
+            \item L3 \smallskip
+                \begin{itemize}
+                    \item Pod labels \medskip
+                    \item FQDN \medskip
+                    \item Services \medskip
+                \end{itemize}
+            \pause
+            \item L4 \medskip
+            \pause
+            \item L7 \smallskip
+                \begin{itemize}
+                    \item HTTP \medskip
+                    \item DNS \medskip
+                    \item Your protocol here \medskip
+                \end{itemize}
+        \end{itemize}
     \end{frame}
 
     \begin{frame}{Policy example}
@@ -249,17 +239,20 @@ import{../sw-l3-l4-policy.yaml}
         \blfootnote{\tiny \url{https://docs.cilium.io/en/stable/gettingstarted/http/}}
     \end{frame}
 
-    %\begin{frame}{Label selection}
-    %    \lstinputlisting[language=go,%
-    %                     basicstyle=\footnotesize,%
-    %                     breaklines=true]{../label-selector.go}
-    %    \blfootnote{\tiny \url{https://github.com/kubernetes/apimachinery/blob/master/pkg/apis/meta/v1/types.go}}
-    %\end{frame}
+    \begin{frame}
+        \centering
+        \vfill
+        \begin{figure}
+            \includesvg[width=\textwidth]{identity-security.svg}
+        \end{figure}
+        \vfill
+        \blfootnote{{\tiny Thomas Graf, {\em Cilium \& BPF - The Future of Networking and Security}, openSUSE Conference 2019}}
+    \end{frame}
 
     \begin{frame}{... memoization something something ...}
     \end{frame}
 
-    \newsectionpage{Layer 7 security}
+    \newsectionpage{Proxying layer 7 requests}
 
     \begin{frame}{Datapath Configuration}
         \centering
