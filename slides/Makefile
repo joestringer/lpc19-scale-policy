@@ -17,4 +17,4 @@ clean:
 	rm -f $(foreach s,${GENERATED_EXTS},${TITLE}${s})
 	rm -rf svg-inkscape
 
-.PHONY: slides clean
+.PHONY: clean
