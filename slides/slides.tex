@@ -48,8 +48,11 @@
 \definecolor{layerblue}{RGB}{213, 234, 254}
 \newcommand\sectioncolor{\setbeamercolor{background canvas}{bg=layerblue}}
 
+% Align hash to font
 \let\oldhash\#%
 \DeclareRobustCommand{\#}{\adjustbox{valign=B,totalheight=.57\baselineskip}{\oldhash}}%
+
+\newcommand{\link}[1]{{\large\color{blue}\href{#1}{#1}}}
 
 \title[Scaling container policy with eBPF]{Scaling container policy management\newline with kernel features}
 \institute{Cilium.io}
@@ -327,11 +330,35 @@ import{../sk-assign.c}
 
     \section*{}
     \begin{frame}{Thank you}
+        \centering
         \vfill
-    \centering
-    Joe Stringer \\\medskip
-    joe@cilium.io
-    \vfill
+        \begin{table}
+            \begin{subtable}[l]{0.6\textwidth}
+            \begin{tabular}{rl}
+                \multicolumn{2}{l}{\textbf{More information}} \\ \\
+                \includesvg[width=0.045\textwidth]{slack.svg}
+                & \link{https://cilium.io/slack} \\
+                \includesvg[width=0.045\textwidth]{github.svg}
+                & \link{https://github.com/cilium/cilium} \\
+                \includesvg[width=0.045\textwidth]{www.svg}
+                & \link{https://cilium.io} \\
+                \includesvg[width=0.045\textwidth]{twitter.svg}
+                & \link{https://twitter.com/ciliumproject} \\
+            \end{tabular}
+            \end{subtable}
+        %    \begin{subtable}[l]{0.45\textwidth}
+        %        \textbf{More Information} \medskip
+        %        \link{https://cilium.io/slack} \medskip
+        %        GitHub:~\link{https://github.com/cilium/cilium} \medskip
+        %        Website:~\link{https://cilium.io/} \medskip
+        %        Twitter:~\link{https://twitter.com/ciliumproject}{@ciliumproject}
+        %    \end{subtable}
+            \begin{subtable}[r]{0.35\textwidth}
+                \includesvg[width=0.9\textwidth]{cilium-gopher.svg}
+            \end{subtable}
+        \end{table}
+        \pause
+        \vfill
     \end{frame}
 
     \section*{Extra slides}

@@ -53,3 +53,8 @@ To build the PDFs:
 Or, to build & open automatically:
 
 `$ make open`
+
+## SVG icons
+
+* [Social links](https://simpleicons.org)
+* [Web link](https://www.svgrepo.com/svg/42568/internet-grid)
