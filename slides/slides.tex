@@ -274,9 +274,10 @@ import{../sk-assign.c}
         \vfill
         \begin{figure}
         \begin{overprint}
-            \onslide<1>\includesvg[width=0.9\textwidth]{cilium-bpf-egress-l3.svg}
-            \onslide<2>\includesvg[width=0.9\textwidth]{cilium-bpf-egress-l7.svg}
-            \onslide<3>\includesvg[width=0.9\textwidth]{cilium-bpf-egress-proxy.svg}
+            \onslide<1>\includesvg[width=\textwidth]{cilium-bpf-egress-dp.svg}
+            \onslide<2>\includesvg[width=\textwidth]{cilium-bpf-egress-l3.svg}
+            \onslide<3>\includesvg[width=\textwidth]{cilium-bpf-egress-l7.svg}
+            \onslide<4>\includesvg[width=\textwidth]{cilium-bpf-egress-proxy.svg}
         \end{overprint}
         \end{figure}
         \vfill
@@ -289,6 +290,7 @@ import{../sk-assign.c}
             \onslide<2>\includesvg[width=\textwidth]{bpf-proxy-nat-1.svg}
             \onslide<3>\includesvg[width=\textwidth]{bpf-proxy-nat-2.svg}
             \onslide<4>\includesvg[width=\textwidth]{bpf-proxy-nat-3.svg}
+            \onslide<5>\includesvg[width=\textwidth]{bpf-proxy-nat-4.svg}
         \end{overprint}
     \end{frame}
 
@@ -305,7 +307,10 @@ import{../sk-assign.c}
 
     \begin{frame}{L7 Configuration: Proposal}
         \centering
-        \includesvg[width=\textwidth]{bpf-proxy-demux.svg}
+        \begin{overprint}
+            \onslide<1>\includesvg[width=\textwidth]{bpf-proxy-demux-1.svg}
+            \onslide<2>\includesvg[width=\textwidth]{bpf-proxy-demux-2.svg}
+        \end{overprint}
     \end{frame}
 
     \begin{frame}[fragile]{Socket assign: Next steps \#1}
