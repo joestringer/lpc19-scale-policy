@@ -4,6 +4,7 @@
 [Linux Plumbers Conference 2019](https://linuxplumbersconf.org/), Lisbon, Portugal.
 
 [Full PDF](https://github.com/joestringer/lpc19-scale-policy/blob/master/lpc19-scale-policy.pdf)
+[Slides PDF](https://github.com/joestringer/lpc19-scale-policy/blob/master/lpc19-scale-policy-slides.pdf)
 
 ## Abstract
 
