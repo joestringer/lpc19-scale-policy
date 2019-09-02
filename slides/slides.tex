@@ -54,6 +54,15 @@
 
 \newcommand{\link}[1]{{\large\color{blue}\href{#1}{#1}}}
 
+% Support backup slides with their own numbering scheme
+\newcommand{\backupbegin}{
+   \newcounter{finalframe}
+   \setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \setcounter{framenumber}{\value{finalframe}}
+}
+
 \title[Scaling container policy with eBPF]{Scaling container policy management\newline with kernel features}
 \institute{Cilium.io}
 \author[Joe Stringer]{Joe Stringer}
@@ -361,8 +370,8 @@ import{../sk-assign.c}
         \vfill
     \end{frame}
 
-    \section*{Extra slides}
-
+    \appendix
+    \backupbegin
     \begin{frame}[fragile]{Socket assign: API quirks \#2}
         \centering
         \begin{itemize}
@@ -371,5 +380,6 @@ import{../sk-assign.c}
             \item Optimization: Add lookup flags to \verb+bpf_sk*_lookup_*()+ \medskip
         \end{itemize}
     \end{frame}
+    \backupend
 
 \end{document}
