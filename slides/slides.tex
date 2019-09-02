@@ -73,6 +73,7 @@
 }
 
 \newcommand\newsectionpage[1]{
+    \section*{}
     {\sectioncolor
         \begin{frame}
             \vfill
@@ -84,6 +85,7 @@
             \vfill
         \end{frame}
     }
+    \section*{#1}
 }
 
 \newcommand\suspense{
@@ -112,11 +114,11 @@ import{../sw-l3-l4-policy.yaml}
 
     %\logo{\includesvg[scale=0.4]{cilium-logo.svg}}
 
-    \section{Background}
-
     \begin{frame}{Overview}
         \tableofcontents
     \end{frame}
+
+    \section{Background}
 
     \begin{frame}{Kubernetes Architecture 101}
         \centering
@@ -208,7 +210,7 @@ import{../sw-l3-l4-policy.yaml}
         \includegraphics[width=0.8\textwidth]{scaling_to_60k_pods.png}
     \end{frame}
 
-    \newsectionpage{Identity-based Security Policy}
+    \newsectionpage{Identity-based security}
 
     %\begin{frame}{Policy model}
     %    \begin{itemize}
@@ -257,7 +259,7 @@ import{../sw-l3-l4-policy.yaml}
     \begin{frame}{... memoization something something ...}
     \end{frame}
 
-    \newsectionpage{Layer 7 Policy}
+    \newsectionpage{Layer 7 security}
 
     \begin{frame}{Datapath Configuration}
         \centering
@@ -304,7 +306,7 @@ import{../sw-l3-l4-policy.yaml}
         \vfill
     \end{frame}
 
-    \section{}
+    \section*{}
     \begin{frame}{Thank you}
         \vfill
     \centering
