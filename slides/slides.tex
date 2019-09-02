@@ -143,7 +143,6 @@ import{../sk-assign.c}
     \end{frame}
 
     \begin{frame}{Kubernetes networking plugins}
-        \vfill
         \begin{table}
             \begin{subtable}[l]{0.6\textwidth}
                 \begin{itemize}
@@ -159,12 +158,10 @@ import{../sk-assign.c}
                 \end{figure}
             \end{subtable}
         \end{table}
-        \vfill
         \blfootnote{{\tiny \url{https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/}}}
     \end{frame}
 
     \begin{frame}{Cilium}
-        \vfill
         \begin{table}
             \begin{subtable}[l]{0.45\textwidth}
                 \begin{itemize}
@@ -180,7 +177,6 @@ import{../sk-assign.c}
                 \end{figure}
             \end{subtable}
         \end{table}
-        \vfill
     \end{frame}
 
     \begin{frame}{Cluster events}
@@ -346,7 +342,6 @@ import{../sk-assign.c}
             \item Resolve \verb+skb_orphan()+ issue \smallskip
             \begin{itemize}
                 \item BPF progs are attached at TC ingress \medskip
-                \pause
                 \item Orphan invoked directly before \verb+PREROUTING+ \medskip
                 \pause
                 \item TC folks are already carrying hacks for this\footnotemark \medskip
