@@ -254,6 +254,27 @@ import{../sk-assign.c}
         \blfootnote{\tiny \url{https://docs.cilium.io/en/stable/gettingstarted/http/}}
     \end{frame}
 
+    \begin{frame}[fragile]{Policy selectors}
+        \begin{tabular}{ | l | c | }
+            \hline
+            & \\
+            \verb+matchLabels:+ & 12345 \verb+{org:empire, class:deathstar}+ \\
+            \verb+    org: empire+ & 12468 \verb+{org:empire, class:tiefighter}+ \\
+            & \\
+            \hline
+            & \\
+            \verb+matchLabels:+ & 12345 \verb+{org:empire, class:deathstar}+ \\
+            \verb+    class: deathstar+ & \\
+            & \\
+            \hline
+            & \\
+            \verb+toFQDNs:+ & 168402 \verb+{192.0.2.3}+ \\
+            \verb+     cantina.empi.re + & 168624 \verb+{192.0.2.4}+ \\
+            & \\
+            \hline
+        \end{tabular}
+    \end{frame}
+
     \begin{frame}
         \centering
         \vfill
@@ -264,7 +285,13 @@ import{../sk-assign.c}
         \blfootnote{{\tiny Thomas Graf, {\em Cilium \& BPF - The Future of Networking and Security}, openSUSE Conference 2019}}
     \end{frame}
 
-    \begin{frame}{... memoization something something ...}
+    \begin{frame}{Policy memoization}
+        \begin{itemize}
+            \item Inspired by kernel RCU \medskip
+            \item Track unique policy selectors \medskip
+            \item Atomically replace identity selections \medskip
+            \item Notify pod policy handlers of selection update \medskip
+        \end{itemize}
     \end{frame}
 
     \newsectionpage{Proxying layer 7 requests}
@@ -339,6 +366,14 @@ import{../sk-assign.c}
                          showstringspaces=false,%
                          basicstyle=\scriptsize,%
                          breaklines=true]{../sk-assign.c}
+    \end{frame}
+
+    \begin{frame}{Summary}
+        \begin{itemize}
+            \item Minimize the number of events \medskip
+            \item Measure the cost of configuration \medskip
+            \item Evaluate costly setup tradeoff with dynamicity \medskip
+        \end{itemize}
     \end{frame}
 
     \section*{}
