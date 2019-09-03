@@ -334,14 +334,27 @@ import{../sk-assign.c}
     \newsectionpage{Proxying layer 7 requests}
 
     \begin{frame}{Datapath Configuration}
-        \centering
+        \vfill
+        \begin{figure}
+        \includesvg[width=\textwidth]{cilium-bpf-egress-dp.svg}
+        \end{figure}
+        \vfill
+    \end{frame}
+
+    \begin{frame}{Datapath Configuration: L3 flow}
+        \vfill
+        \begin{figure}
+        \includesvg[width=\textwidth]{cilium-bpf-egress-l3.svg}
+        \end{figure}
+        \vfill
+    \end{frame}
+
+    \begin{frame}{Datapath Configuration: L7 flow}
         \vfill
         \begin{figure}
         \begin{overprint}
-            \onslide<1>\includesvg[width=\textwidth]{cilium-bpf-egress-dp.svg}
-            \onslide<2>\includesvg[width=\textwidth]{cilium-bpf-egress-l3.svg}
-            \onslide<3>\includesvg[width=\textwidth]{cilium-bpf-egress-l7.svg}
-            \onslide<4>\includesvg[width=\textwidth]{cilium-bpf-egress-proxy.svg}
+            \onslide<1>\includesvg[width=\textwidth]{cilium-bpf-egress-l7.svg}
+            \onslide<2>\includesvg[width=\textwidth]{cilium-bpf-egress-proxy.svg}
         \end{overprint}
         \end{figure}
         \vfill
@@ -350,10 +363,27 @@ import{../sk-assign.c}
     \begin{frame}{L7 Configuration: Past}
         \centering
         \begin{overprint}
+            % First: Lots of configuration.
+            % - Various control messaging with proxy.
+            % - Synchronization between agent and proxy for policy map plumbing
+            % - Proxy configuration failure handling
             \onslide<1>\includesvg[width=\textwidth]{bpf-proxy-nat-0.svg}
             \onslide<2>\includesvg[width=\textwidth]{bpf-proxy-nat-1.svg}
+            % Rewrite destination, update checksums, etc.
+            % - Great, now it's directed towards the local proxy instance
             \onslide<3>\includesvg[width=\textwidth]{bpf-proxy-nat-2.svg}
+            % Uh-oh, we lost our actual destination.
+            % - Let me just fix that up...
+            % - New bpf map, proxymap!
+            % - Make proxy aware of this map to read the original destination
             \onslide<4>\includesvg[width=\textwidth]{bpf-proxy-nat-3.svg}
+            % OK, so where are we at?
+            % - It works (yay)
+            % - Configuration is costly, per-port
+            % - Per-packet NAT seems a bit unnecessary, we know it's destined
+            %   locally
+            % - Maintaining this extra proxymap for transferring metadata
+            %   between kernel and userspace seems a bit icky
             \onslide<5>\includesvg[width=\textwidth]{bpf-proxy-nat-4.svg}
         \end{overprint}
     \end{frame}
@@ -361,10 +391,27 @@ import{../sk-assign.c}
     \begin{frame}{L7 Configuration: Present}
         \centering
         \begin{overprint}
+            % What's the alternative? Transparent sockets!
+            % - Requires a bit of proxy work, but hey we only need one listener
+            % - Every port for the same protocol can go over the same proxyport
             \onslide<1>\includesvg[width=\textwidth]{bpf-proxy-tproxy-0.svg}
+            % Theme: Shakespeare
+            %
+            % Gonna require a bit more kernel configuration...
+            % - A sprinkling of netfilter
+            % - A dash of policy routing
+            % - Watch out for the mark of the beast...
             \onslide<2>\includesvg[width=\textwidth]{bpf-proxy-tproxy-1.svg}
+            % ...and there it is.
+            % - In BPF, we mark the packet for tproxying
+            % - In PREROUTING we match on the mark and look up the proxy port
+            % - Actually going to need another mark..
             \onslide<3>\includesvg[width=\textwidth]{bpf-proxy-tproxy-2.svg}
+            % Set up policy routing
+            % - IP rule to match the mark, choose a route table..
+            % - And configure that route table to always route locally
             \onslide<4>\includesvg[width=\textwidth]{bpf-proxy-tproxy-3.svg}
+            % Home free!
             \onslide<5>\includesvg[width=\textwidth]{bpf-proxy-tproxy-4.svg}
         \end{overprint}
     \end{frame}
@@ -372,7 +419,15 @@ import{../sk-assign.c}
     \begin{frame}{L7 Configuration: Proposal}
         \centering
         \begin{overprint}
+            % How about... we put this in BPF
+            % - Discussed at LSFMM, which lead to two directions
+            % - Monday discussion slot by CF
+            % - Socket assign, as follows...
             \onslide<1>\includesvg[width=\textwidth]{bpf-proxy-demux-1.svg}
+            % Started looking at this, it looks like sk_assign
+            % - Socket lookup was introduced in v4.20
+            % - New: sk_assign
+            % - Oh and we need our magic marks
             \onslide<2>\includesvg[width=\textwidth]{bpf-proxy-demux-2.svg}
         \end{overprint}
     \end{frame}
