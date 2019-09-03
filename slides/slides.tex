@@ -377,31 +377,30 @@ import{../sk-assign.c}
         \end{overprint}
     \end{frame}
 
-    \begin{frame}[fragile]{Socket assign: Next steps \#1}
-        \centering
-        \begin{itemize}
-            \item Resolve \verb+skb_orphan()+ issue \smallskip
-            \begin{itemize}
-                \item BPF progs are attached at TC ingress \medskip
-                \item Orphan invoked directly before \verb+PREROUTING+ \medskip
-                \pause
-                \item TC folks are already carrying hacks for this\footnotemark \medskip
-                \pause
-                \item Just move to \verb+____dev_forward_skb()+\footnotemark? \medskip
-            \end{itemize}
-            \pause
-            \item Propose \verb+bpf_sk_assign()+ helper \medskip
-        \end{itemize}
-        \footnotetext[1]{\tiny \url{https://www.mail-archive.com/netdev@vger.kernel.org/msg303851.html}}
-        \footnotetext[2]{\tiny \url{https://www.mail-archive.com/netdev@vger.kernel.org/msg304057.html}}
-    \end{frame}
-
     \begin{frame}[fragile]{Socket assign: RFC}
         \centering
         \lstinputlisting[language=c,%
                          showstringspaces=false,%
                          basicstyle=\scriptsize,%
                          breaklines=true]{../sk-assign.c}
+    \end{frame}
+
+    \begin{frame}[fragile]{Socket assign: Hiccup}
+        \centering
+        \begin{itemize}
+            \item BPF progs are attached at TC ingress \medskip
+            \item \verb+skb_orphan()+ invoked directly before \verb+PREROUTING+ \medskip
+            \pause
+            \item TC folks are already carrying hacks for this\footnotemark \medskip
+            \pause
+            \item Just move to \verb+____dev_forward_skb()+\footnotemark? \medskip
+        \end{itemize}
+        \footnotetext[1]{\tiny \url{https://www.mail-archive.com/netdev@vger.kernel.org/msg303851.html}}
+        \footnotetext[2]{\tiny \url{https://www.mail-archive.com/netdev@vger.kernel.org/msg304057.html}}
+    \end{frame}
+
+    \begin{frame}{L7 Configuration: Socket redirect}
+        \includesvg[width=\textwidth]{bpf-proxy-demux-3.svg}
     \end{frame}
 
     \begin{frame}{Summary}
