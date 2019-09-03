@@ -16,6 +16,7 @@
 \usepackage{pifont}
 \usepackage{subcaption}
 \usepackage{svg} % Requires inkscape
+\usepackage{tabularx}
 \usepackage{tikz}
 \usetikzlibrary{mindmap}
 \usepackage{verbatim}
@@ -277,16 +278,20 @@ import{../sk-assign.c}
             \item 12465 \verb+{org:alliance, class:xwing}+ \smallskip
         \end{itemize}
         \vfill
-        \begin{tabular}{ | l | l | }
+        \begin{tabularx}{\textwidth}{l|l}
             \hline
+            & \\
             \verb+matchLabels:+ & 12345 \verb+{org:empire, class:deathstar}+ \\
             \verb+    org: empire+ & 12468 \verb+{org:empire, class:tiefighter}+ \\
+            & \\
             \hline
+            & \\
             \verb+matchLabels:+ & \\
             \verb+    org: empire+ & 12345 \verb+{org:empire, class:deathstar}+ \\
             \verb+    class: deathstar+ & \\
+            & \\
             \hline
-        \end{tabular}
+        \end{tabularx}
         \vfill
     \end{frame}
 
@@ -306,12 +311,14 @@ import{../sk-assign.c}
             \item 168624 \verb+{cidr:192.0.2.4}+ \smallskip
         \end{itemize}
         \vfill
-        \begin{tabular}{ | l | l | }
+        \begin{tabularx}{\textwidth}{ l|l}
             \hline
+            & \\
             \verb+toFQDNs:+ & 168402 \verb+{cidr:192.0.2.3}+ \\
             \verb+     cantina.empi.re + & 168624 \verb+{cidr:192.0.2.4}+ \\
+            & \\
             \hline
-        \end{tabular}
+        \end{tabularx}
         \vfill
     \end{frame}
 
