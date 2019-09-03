@@ -461,8 +461,9 @@ import{../sk-assign.c}
     \begin{frame}{Summary}
         \begin{itemize}
             \item Minimize the number of events \medskip
-            \item Measure the cost of configuration \medskip
-            \item Evaluate costly setup tradeoff with dynamicity \medskip
+            \item Separate concerns: Policy vs addressing \medskip
+            \item Frontload expensive operations \medskip
+            \item ... while keeping runtime costs low \medskip
         \end{itemize}
     \end{frame}
 
@@ -472,25 +473,18 @@ import{../sk-assign.c}
         \vfill
         \begin{table}
             \begin{subtable}[l]{0.6\textwidth}
-            \begin{tabular}{rl}
-                \multicolumn{2}{l}{\textbf{More information}} \\ \\
-                \includesvg[width=0.045\textwidth]{www.svg}
-                & \link{https://cilium.io} \\
-                \includesvg[width=0.045\textwidth]{slack.svg}
-                & \link{https://cilium.io/slack} \\
-                \includesvg[width=0.045\textwidth]{github.svg}
-                & \link{https://github.com/cilium/cilium} \\
-                \includesvg[width=0.045\textwidth]{twitter.svg}
-                & \link{https://twitter.com/ciliumproject} \\
-            \end{tabular}
+                \begin{tabular}{rl}
+                    \multicolumn{2}{l}{\textbf{More information}} \\ \\
+                    \includesvg[width=0.045\textwidth]{www.svg}
+                    & \link{https://cilium.io} \\
+                    \includesvg[width=0.045\textwidth]{slack.svg}
+                    & \link{https://cilium.io/slack} \\
+                    \includesvg[width=0.045\textwidth]{github.svg}
+                    & \link{https://github.com/cilium/cilium} \\
+                    \includesvg[width=0.045\textwidth]{twitter.svg}
+                    & \link{https://twitter.com/ciliumproject} \\
+                \end{tabular}
             \end{subtable}
-        %    \begin{subtable}[l]{0.45\textwidth}
-        %        \textbf{More Information} \medskip
-        %        \link{https://cilium.io/slack} \medskip
-        %        GitHub:~\link{https://github.com/cilium/cilium} \medskip
-        %        Website:~\link{https://cilium.io/} \medskip
-        %        Twitter:~\link{https://twitter.com/ciliumproject}{@ciliumproject}
-        %    \end{subtable}
             \begin{subtable}[r]{0.35\textwidth}
                 \includesvg[width=0.9\textwidth]{cilium-gopher.svg}
             \end{subtable}
@@ -501,7 +495,11 @@ import{../sk-assign.c}
 
     \appendix
     \backupbegin
-    \begin{frame}[fragile]{Socket assign: API quirks \#2}
+    \begin{frame}{Socket redirect}
+        \includesvg[width=\textwidth]{bpf-proxy-demux-3.svg}
+    \end{frame}
+
+    \begin{frame}[fragile]{Socket assign: API quirks}
         \centering
         \begin{itemize}
             \item Nit: Need to use \verb+sock_common+ socket lookups \medskip
