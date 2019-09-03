@@ -268,25 +268,50 @@ import{../sk-assign.c}
         \blfootnote{\tiny \url{https://docs.cilium.io/en/stable/gettingstarted/http/}}
     \end{frame}
 
-    \begin{frame}[fragile]{Policy selectors}
-        \begin{tabular}{ | l | c | }
+    \begin{frame}[fragile]{Label selectors}
+        \vfill
+        \begin{itemize}
+            \item 12345 \verb+{org:empire, class:deathstar}+ \smallskip
+            \item 12468 \verb+{org:empire, class:tiefighter}+ \smallskip
+            \item 12465 \verb+{org:alliance, class:xwing}+ \smallskip
+        \end{itemize}
+        \vfill
+        \begin{tabular}{ | l | l | }
             \hline
-            & \\
             \verb+matchLabels:+ & 12345 \verb+{org:empire, class:deathstar}+ \\
             \verb+    org: empire+ & 12468 \verb+{org:empire, class:tiefighter}+ \\
-            & \\
             \hline
-            & \\
-            \verb+matchLabels:+ & 12345 \verb+{org:empire, class:deathstar}+ \\
+            \verb+matchLabels:+ & \\
+            \verb+    org: empire+ & 12345 \verb+{org:empire, class:deathstar}+ \\
             \verb+    class: deathstar+ & \\
-            & \\
-            \hline
-            & \\
-            \verb+toFQDNs:+ & 168402 \verb+{192.0.2.3}+ \\
-            \verb+     cantina.empi.re + & 168624 \verb+{192.0.2.4}+ \\
-            & \\
             \hline
         \end{tabular}
+        \vfill
+    \end{frame}
+
+    \begin{frame}{Accessing remote resources}
+        \begin{itemize}
+            \item Labels are only valid within the cluster \medskip
+            \item DNS is a kind of label... \medskip
+            \item Proxy DNS, associate IPs to FQDNs \medskip
+            \item Bonus: Identity mapping can be local \medskip
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}[fragile]{FQDN selectors}
+        \vfill
+        \begin{itemize}
+            \item 168402 \verb+{cidr:192.0.2.3}+ \smallskip
+            \item 168624 \verb+{cidr:192.0.2.4}+ \smallskip
+        \end{itemize}
+        \vfill
+        \begin{tabular}{ | l | l | }
+            \hline
+            \verb+toFQDNs:+ & 168402 \verb+{cidr:192.0.2.3}+ \\
+            \verb+     cantina.empi.re + & 168624 \verb+{cidr:192.0.2.4}+ \\
+            \hline
+        \end{tabular}
+        \vfill
     \end{frame}
 
     \begin{frame}{Policy memoization}
