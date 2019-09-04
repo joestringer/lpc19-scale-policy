@@ -333,19 +333,17 @@ import{../sk-assign.c}
 
     \newsectionpage{Proxying layer 7 requests}
 
-    \begin{frame}{Datapath Configuration}
-        \vfill
-        \begin{figure}
-        \includesvg[width=\textwidth]{cilium-bpf-egress-dp.svg}
-        \end{figure}
-        \vfill
-    \end{frame}
-
     \begin{frame}{Datapath Configuration: L3 flow}
         \vfill
         \begin{figure}
         \includesvg[width=\textwidth]{cilium-bpf-egress-l3.svg}
         \end{figure}
+        \vfill
+    \end{frame}
+
+    \begin{frame}{L7 is the new L4}
+        \vfill
+        \includegraphics[width=\textwidth]{cilium_api_security.png}
         \vfill
     \end{frame}
 
