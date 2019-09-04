@@ -295,55 +295,66 @@ import{../sk-assign.c}
         \vfill
     \end{frame}
 
-    \begin{frame}{Accessing remote resources}
-        \begin{itemize}
-            \item Labels are only valid within the cluster \medskip
-            \item DNS is a kind of label... \medskip
-            \item Proxy DNS, associate IPs to FQDNs \medskip
-            \item Bonus: Identity mapping can be local \medskip
-        \end{itemize}
-    \end{frame}
-
-    \begin{frame}[fragile]{FQDN selectors}
-        \vfill
-        \begin{itemize}
-            \item 168402 \verb+{cidr:192.0.2.3}+ \smallskip
-            \item 168624 \verb+{cidr:192.0.2.4}+ \smallskip
-        \end{itemize}
-        \vfill
-        \begin{tabularx}{\textwidth}{ l|l}
-            \hline
-            & \\
-            \verb+toFQDNs:+ & 168402 \verb+{cidr:192.0.2.3}+ \\
-            \verb+     cantina.empi.re + & 168624 \verb+{cidr:192.0.2.4}+ \\
-            & \\
-            \hline
-        \end{tabularx}
-        \vfill
-    \end{frame}
-
-    \begin{frame}{Policy memoization}
-        \begin{itemize}
-            \item Inspired by kernel RCU \medskip
-            \item Track unique policy selectors \medskip
-            \item Atomically replace identity selections \medskip
-            \item Notify policy handlers for BPF update \medskip
-        \end{itemize}
-    \end{frame}
-
-    \newsectionpage{Proxying layer 7 requests}
-
-    \begin{frame}{Datapath Configuration: L3 flow}
+    \begin{frame}{Datapath Configuration}
         \vfill
         \begin{figure}
-        \includesvg[width=\textwidth]{cilium-bpf-egress-l3.svg}
+        \begin{overprint}
+            \onslide<1>\includesvg[width=\textwidth]{cilium-bpf-policy-1.svg}
+            \onslide<2>\includesvg[width=\textwidth]{cilium-bpf-policy-2.svg}
+        \end{overprint}
         \end{figure}
         \vfill
     \end{frame}
 
+    %\begin{frame}{Policy memoization}
+    %    \begin{itemize}
+    %        \item Inspired by kernel RCU \medskip
+    %        \item Track unique policy selectors \medskip
+    %        \item Atomically replace identity selections \medskip
+    %        \item Notify policy handlers for BPF update \medskip
+    %    \end{itemize}
+    %\end{frame}
+
+    %\begin{frame}{Accessing remote resources}
+    %    \begin{itemize}
+    %        \item Labels are only valid within the cluster \medskip
+    %        \item DNS is a kind of label... \medskip
+    %        \item Proxy DNS, associate IPs to FQDNs \medskip
+    %        \item Bonus: Identity mapping can be local \medskip
+    %    \end{itemize}
+    %\end{frame}
+
+    %\begin{frame}[fragile]{FQDN selectors}
+    %    \vfill
+    %    \begin{itemize}
+    %        \item 168402 \verb+{cidr:192.0.2.3}+ \smallskip
+    %        \item 168624 \verb+{cidr:192.0.2.4}+ \smallskip
+    %    \end{itemize}
+    %    \vfill
+    %    \begin{tabularx}{\textwidth}{ l|l}
+    %        \hline
+    %        & \\
+    %        \verb+toFQDNs:+ & 168402 \verb+{cidr:192.0.2.3}+ \\
+    %        \verb+     cantina.empi.re + & 168624 \verb+{cidr:192.0.2.4}+ \\
+    %        & \\
+    %        \hline
+    %    \end{tabularx}
+    %    \vfill
+    %\end{frame}
+
+    \newsectionpage{Layer 7 security}
+
     \begin{frame}{L7 is the new L4}
         \vfill
         \includegraphics[width=\textwidth]{cilium_api_security.png}
+        \vfill
+    \end{frame}
+
+    \begin{frame}{Datapath Configuration: L3 flow}
+        \vfill
+        \begin{figure}
+            \onslide<1>\includesvg[width=\textwidth]{cilium-bpf-egress-l3.svg}
+        \end{figure}
         \vfill
     \end{frame}
 
