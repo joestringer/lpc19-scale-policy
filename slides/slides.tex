@@ -299,7 +299,26 @@ import{../sk-assign.c}
         \vfill
         \begin{figure}
         \begin{overprint}
+            % In the case of ingress policy, by this point it's quite simple.
+            % We calculated the necessary allowed identities, just put it in
+            % the map.
+            %
+            % In actuality, this was a simple example but as the number of
+            % identities in the cluster rises, and the policy complexity
+            % increases, the policy computation can end up becoming quite
+            % expensive so we need to be intelligent about how we compute it.
+            % Won't go into detail here.
             \onslide<1>\includesvg[width=\textwidth]{cilium-bpf-policy-1.svg}
+            % Egress policy is a bit more elaborate.
+            % - Ingress case you can transfer the identity with the packet.
+            % - Egress you have to choose:
+            %   * Defer egress policy apply to the destination
+            %     -> Requires destination to know policy of all pods
+            %   * Apply egress policy at source, but needs to know identity
+            %     of destination
+            %     -> Turns out this is much simpler:
+            %        + When a pod spins up and gets an identity, push ip-id
+            %          mapping to kvstore.
             \onslide<2>\includesvg[width=\textwidth]{cilium-bpf-policy-2.svg}
         \end{overprint}
         \end{figure}
