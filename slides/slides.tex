@@ -233,6 +233,7 @@ import{../sk-assign.c}
     \begin{frame}
         \centering
         \vfill
+        % What's going on here?
         \begin{figure}
             \includesvg[width=\textwidth]{identity-security.svg}
         \end{figure}
@@ -309,6 +310,8 @@ import{../sk-assign.c}
             % expensive so we need to be intelligent about how we compute it.
             % Won't go into detail here.
             \onslide<1>\includesvg[width=\textwidth]{cilium-bpf-policy-1.svg}
+            % TODO: Clean up this
+            \\(Pretend this is egress diagram)
             % Egress policy is a bit more elaborate.
             % - Ingress case you can transfer the identity with the packet.
             % - Egress you have to choose:
@@ -320,6 +323,7 @@ import{../sk-assign.c}
             %        + When a pod spins up and gets an identity, push ip-id
             %          mapping to kvstore.
             \onslide<2>\includesvg[width=\textwidth]{cilium-bpf-policy-2.svg}
+            \\
         \end{overprint}
         \end{figure}
         \vfill
@@ -390,6 +394,9 @@ import{../sk-assign.c}
 
     \begin{frame}{L7 Configuration: Past}
         \centering
+        % TODO: Clean up this
+        \onslide<1>{\footnotesize Per-endpoint configuration}
+        \onslide<1->
         \begin{overprint}
             % First: Lots of configuration.
             % - Various control messaging with proxy.
@@ -414,6 +421,8 @@ import{../sk-assign.c}
             %   between kernel and userspace seems a bit icky
             \onslide<5>\includesvg[width=\textwidth]{bpf-proxy-nat-4.svg}
         \end{overprint}
+        % TODO: Clean up this
+        A: 192.0.2.3:33333 ; B: 192.0.2.4:80 ; L: 192.0.2.1:12345
     \end{frame}
 
     \begin{frame}{L7 Configuration: Present}
@@ -488,7 +497,11 @@ import{../sk-assign.c}
 
     \begin{frame}{Summary}
         \begin{itemize}
-            \item Minimize the number of events \medskip
+            \item Minimize processing cost \smallskip
+            \begin{itemize}
+                \item Number of events \medskip
+                \item Cost for each event \medskip
+            \end{itemize}
             \item Separate concerns: Policy vs addressing \medskip
             \item Frontload expensive operations \medskip
             \item ... while keeping runtime costs low \medskip
