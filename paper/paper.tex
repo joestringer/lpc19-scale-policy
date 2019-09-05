@@ -69,6 +69,115 @@ BPF, Linux, packet processing, sockets
 
 \section{Introduction}
 
+Cilium\todo{ref} is a container networking plugin\todo{ref} built upon a
+highly customisable bpf\todo{ref}-based dataplane in the Linux kernel. It
+provides functionality such as:
+
+\begin{itemize}
+    \item Configuring the Linux stack for container connectivity to the host
+          and beyond (by satisfying CNI\todo{ref});
+    \item Establishing inter-node connectivity within a cluster and with
+          other Cilium-managed clusters;
+    \item Service IP translation; and
+    \item Network security at OSI layers 3, 4 and 7.
+\end{itemize}
+
+The focus of recent work on Cilium has been to support deployments in clusters
+with scale in the order of 1000s of nodes and 100,000s of endpoints (networking
+namespaces, or pods in kubernetes parlance). Supporting such scale involves
+careful design of the entire interaction between Cilium and the cluster
+orchestrator, between Cilium instances that reside on nodes within the cluster,
+and finally for configuration of the datapath within each node. This paper
+focuses on the last of these, in particular documenting a few aspects of Linux
+stack configuration which provide meaningful benefits to the performance and
+operation in such environments.
+
+Scaling means:
+\begin{itemize}
+    \item \todo{Not using the entire CPU the whole time for network configuration}
+    \item \todo{Configuring new networking behaviour within a reasonable time}
+    \item \todo{Supporting rapid deployment of containers}
+    \item \todo{Minimizing per-packet processing cost (reduce latency, increase throughput)}
+\end{itemize}
+
+\section{Background}
+
+\begin{itemize}
+    \item \todo{Required orchestrator background}
+    \begin{itemize}
+        \item \todo{Resource restrictions}
+    \end{itemize}
+    \item \todo{Cilium kvstore co-ordination}
+    \item \todo{Cilium `endpoint'}
+    \item \todo{The identity primitive}
+\end{itemize}
+
+\section{ELF Templating}
+
+Cilium initially focused on demonstrating high performance handling of packets
+between containers within a node, which involved optimizations such as
+individually tailoring the datapath handling code for each endpoint by
+embedding IP addresses and security identities directly into the bytecode of
+the datapath for each container. Rather than having a single packet processing
+path that uses lookups upon packet contents to determine the source addressing
+and security-relevant data, the datapath for each source directly embeds the
+code. \todo{This has benefits in terms of latency, and also security---the
+datapath for an endpoint is statically configured at the beginning and the
+runtime cannot inherently be exploited to bypass security lookups, because it's
+not a runtime operation.} Figure~\todo{per-endpoint-compile-diagram} depicts
+the process of configuring the dataplane for an individual endpoint.
+
+When attempting to deploy a large number of endpoints with this model, however,
+we hit some issues. Specifically in some cases we have had users that wish to
+enforce stringent resource management upon the agent. If LLVM on a standard
+server-class CPU is able to compile the Cilium BPF code within 1s with a full
+CPU, then when restricting to 100m CPUs would increase this time to 10s
+(assuming that CPU is the bounding limitation for compilation). Secondly, some
+large-scale users of Cilium wish to perform work which is bursty in nature, ie
+they may schedule hundreds or thousands of workloads at once and the ability to
+deploy dozens of these onto a given node within a minimal time period is
+desirable.
+
+To alleviate the resource consumption issue arising from the use of runtime
+compilation, Cilium now compiles the code once to generate an ELF file which
+serves as a template for the addressing and identity\todo{fixup ref?}
+substitution of the nature that was previously implemented prior to
+compilation.
+
+\subsection{Encoding static data in a backwards-compatible manner}
+
+\todo{Describe how this works}
+
+\todo{Code input snippets}
+
+\todo{Loader responsibility}
+
+\todo{Benefits/Drawbacks of this approach}
+
+\subsection{Implementation using static data maps in the kernel}
+
+\todo{Code input snippets}
+
+\subsection{Speculation on further verifier cost amortisation}
+
+\section{Identity-based security}
+
+\subsection{Encoding identity in packets}
+
+\subsection{Distributing identity}
+
+\subsection{Brief analysis of policy computation cost}
+
+\section{Layer 7 security}
+
+\subsection{Redirects performed via NAT}
+
+\subsection{Redirects performed via Netfilter TPROXY}
+
+\subsection{Proposal for implementing TPROXY logic in BPF}
+
+\section{Conclusion}
+
 \section{Acknowledgments}
 
 
