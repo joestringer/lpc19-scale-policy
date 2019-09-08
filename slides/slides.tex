@@ -111,6 +111,10 @@
 import{../sw-l3-l4-policy.yaml}
 \end{filecontents*}
 
+\begin{filecontents*}{../early-demux.c}
+import{../early-demux.c}
+\end{filecontents*}
+
 \begin{filecontents*}{../sk-assign.c}
 import{../sk-assign.c}
 \end{filecontents*}
@@ -120,6 +124,9 @@ import{../sk-assign.c}
     {\sectioncolor
     \begin{frame}
         \titlepage
+        % Going to talk about some of the techniques we've used to scale Cilium
+        % to support thousands of nodes in a cluster and hundreds of thousands
+        % of pods.
         \begin{figure}
             \includegraphics[scale=0.2]{lpc-logo.png}
         \end{figure}
@@ -129,10 +136,49 @@ import{../sk-assign.c}
     %\logo{\includesvg[scale=0.4]{cilium-logo.svg}}
 
     \begin{frame}{Overview}
+        % The focus will obviously be in how we configure kernel features,
+        % but I'll provide some amount of background / context to consider the
+        % material
         \tableofcontents
     \end{frame}
 
     \section{Background}
+
+    \begin{frame}{Kubernetes Architecture 101}
+        \centering
+        \vfill
+        % k8s is our most common orchestrator integrations
+        % The way k8s works is via centralized master
+        % 
+        % how deploy pods
+        % how deploy nodes
+        % how setup connectivity?
+        % how deploy policy
+        \begin{figure}
+            \includesvg[width=0.8\textwidth,keepaspectratio]{k8s-architecture.svg}
+        \end{figure}
+        \vfill
+        \blfootnote{{\tiny Thomas Graf, {\em Scaling to 5k Kubernetes Nodes: Lessons Learned}, Cloud Native Rejekts EU 2019}}
+    \end{frame}
+
+    \begin{frame}{Kubernetes networking plugins}
+        \begin{table}
+            \begin{subtable}[l]{0.6\textwidth}
+                \begin{itemize}
+                    \item Plumb local connectivity (CNI) \medskip
+                    \item Connect remote nodes \medskip
+                    \item Services / loadbalancing \medskip
+                    \item Network policy \medskip
+                \end{itemize}
+            \end{subtable}
+            \begin{subtable}[r]{0.35\textwidth}
+                \begin{figure}
+                    \includesvg[width=0.4\textwidth,keepaspectratio]{cni-logo.svg}
+                \end{figure}
+            \end{subtable}
+        \end{table}
+        \blfootnote{{\tiny \url{https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/}}}
+    \end{frame}
 
     \begin{frame}{Cilium}
         \begin{table}
@@ -154,47 +200,29 @@ import{../sk-assign.c}
                 %        % Deploy more and bigger clusters
                 %\end{itemize}
                 \begin{itemize}
+                    % BPF -> fast, programmable
                     \item Native eBPF dataplane \medskip
-                    \item Plumb connectivity \medskip
+                    % Responsible for cni, node connectivity, services...
+                    %\item Plumb connectivity \medskip
+                    % Implements security using container-native constructs.
+                    % Assigns identities corresponding to container labels,
+                    % more on this later..
                     \item Identity-based security \medskip
+                    % Goal: scalability
                     \item Scalable \medskip
                 \end{itemize}
             \end{subtable}
             \begin{subtable}[r]{0.5\textwidth}
+                % Common deployment scenario: k8s cluster
+                % Scalability concerns ..
+                % What do existing plugins do?
+                % -> Configure iptables, choke and use lots of resource when
+                %    many {nodes, pods, services} are configured.
                 \begin{figure}
                     \includesvg[width=1.1\textwidth,keepaspectratio]{cilium-plugins.svg}
                 \end{figure}
             \end{subtable}
         \end{table}
-    \end{frame}
-
-    %\begin{frame}{Kubernetes networking plugins}
-    %    \begin{table}
-    %        \begin{subtable}[l]{0.6\textwidth}
-    %            \begin{itemize}
-    %                \item Plumb local connectivity (CNI) \medskip
-    %                \item Connect remote nodes \medskip
-    %                \item Services / loadbalancing \medskip
-    %                \item Network policy \medskip
-    %            \end{itemize}
-    %        \end{subtable}
-    %        \begin{subtable}[r]{0.35\textwidth}
-    %            \begin{figure}
-    %                \includesvg[width=0.4\textwidth,keepaspectratio]{cni-logo.svg}
-    %            \end{figure}
-    %        \end{subtable}
-    %    \end{table}
-    %    \blfootnote{{\tiny \url{https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/}}}
-    %\end{frame}
-
-    \begin{frame}{Kubernetes Architecture 101}
-        \centering
-        \vfill
-        \begin{figure}
-            \includesvg[width=0.8\textwidth,keepaspectratio]{k8s-architecture.svg}
-        \end{figure}
-        \vfill
-        \blfootnote{{\tiny Thomas Graf, {\em Scaling to 5k Kubernetes Nodes: Lessons Learned}, Cloud Native Rejekts EU 2019}}
     \end{frame}
 
     %\begin{frame}{Cluster events}
@@ -208,19 +236,24 @@ import{../sk-assign.c}
 
     \begin{frame}{What does it mean to scale?}
         \begin{itemize}
-            \item Minimize unnecessary events \smallskip
+            \item Manage cluster interactions \smallskip
             \begin{itemize}
-                \item Reduce load on centralized components \medskip
-                \item Minimize event sizes \medskip
+                \item Minimize unnecessary events \medskip
+                \item Reduce event sizes \medskip
+                \item ... \medskip
             \end{itemize}
-            \item Apply datapath changes quickly \medskip
-            \item Without consuming all available resources \medskip
+            \item Optimize work within the node \smallskip
+            \begin{itemize}
+                \item Apply datapath changes efficiently \medskip
+                %\item \m
+                %\onslide<2> ...without consuming all available resources \medskip
+            \end{itemize}
             %\item Roll out bursty workloads quickly \medskip
             %\item Reduce time from policy change to enforcement \medskip
         \end{itemize}
     \end{frame}
 
-    \newsectionpage{Pod event processing}
+    \newsectionpage{Deploying fast datapaths fast}
 
     \begin{frame}{BPF plumbing}
         \centering
@@ -240,6 +273,32 @@ import{../sk-assign.c}
     \begin{frame}{1K nodes: Scaling to 60k pods}
         \centering
         \includegraphics[width=0.8\textwidth]{scaling_to_60k_pods.png}
+    \end{frame}
+
+    \begin{frame}{Initial implementation}
+        \begin{itemize}
+            \item Treat ELF symbol table as a data table \medskip
+            \item Declare symbols for all static data (constants) \medskip
+            \item (hack) Cast desired static data symbol pointer to data \medskip
+            \item Update loader to place data into global symbol table offset \medskip
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}[fragile]{Upstream libbpf}
+        \begin{itemize}
+            \item Create maps for \verb+.bss+, \verb+.data+, \verb+.rodata+ \medskip
+            \item Relocate loads from static symbols to be map loads \medskip
+            \item Kernel-side, fix up to be direct load \medskip
+        \end{itemize}
+        \blfootnote{\tiny \url{https://lwn.net/ml/bpf/d406e2487f0dc1bf0326ed12e5e0cd0d17eae89c.1554314902.git.daniel@iogearbox.net/}}
+    \end{frame}
+
+    \begin{frame}{Future directions}
+        \centering
+        \begin{itemize}
+            \item Load templates into the kernel \medskip
+            \item Support code path manipulation \medskip
+        \end{itemize}
     \end{frame}
 
     \newsectionpage{Identity-based security}
@@ -512,6 +571,14 @@ import{../sk-assign.c}
 
     \begin{frame}{L7 Configuration: Socket redirect}
         \includesvg[width=\textwidth]{bpf-proxy-demux-3.svg}
+    \end{frame}
+
+    \begin{frame}[fragile]{Early demux}
+        \centering
+        \lstinputlisting[language=c,%
+                         showstringspaces=false,%
+                         basicstyle=\scriptsize,%
+                         breaklines=true]{../early-demux.c}
     \end{frame}
 
     \begin{frame}{Summary}
