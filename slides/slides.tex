@@ -134,47 +134,30 @@ import{../sk-assign.c}
 
     \section{Background}
 
-    \begin{frame}{Kubernetes Architecture 101}
-        \centering
-        \vfill
-        \begin{figure}
-            \includesvg[width=0.8\textwidth,keepaspectratio]{k8s-architecture.svg}
-        \end{figure}
-        \vfill
-        \blfootnote{{\tiny Thomas Graf, {\em Scaling to 5k Kubernetes Nodes: Lessons Learned}, Cloud Native Rejekts EU 2019}}
-    \end{frame}
-
-    \begin{frame}{Kubernetes networking plugins}
-        \begin{table}
-            \begin{subtable}[l]{0.6\textwidth}
-                \begin{itemize}
-                    \item Plumb local connectivity (CNI) \medskip
-                    \item Connect remote nodes \medskip
-                    \item Services / loadbalancing \medskip
-                    \item Network policy \medskip
-                \end{itemize}
-            \end{subtable}
-            \begin{subtable}[r]{0.35\textwidth}
-                \begin{figure}
-                    \includesvg[width=0.4\textwidth,keepaspectratio]{cni-logo.svg}
-                \end{figure}
-            \end{subtable}
-        \end{table}
-        \blfootnote{{\tiny \url{https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/}}}
-    \end{frame}
-
     \begin{frame}{Cilium}
         \begin{table}
             \begin{subtable}[l]{0.45\textwidth}
+                %\begin{itemize}
+                %    \item \textbf<2>{Plumb local connectivity} \medskip
+                %    \item Connect remote nodes \medskip
+                %    \item Services / loadbalancing \medskip
+                %    \item \textbf<2>{Network policy} \medskip
+                %\end{itemize}
+                %\begin{itemize}
+                %    \item Native BPF dataplane \medskip
+                %        % BPF -> Awesome, performance, flexibility
+                %    \item Modular architecture \medskip
+                %        % Modular -> Integrate with your existing tools
+                %    \item API-aware authorization \medskip
+                %        % L7 security -> More secure
+                %    \item Scalability \medskip
+                %        % Deploy more and bigger clusters
+                %\end{itemize}
                 \begin{itemize}
-                    \item Native BPF dataplane \medskip
-                        % BPF -> Awesome, performance, flexibility
-                    \item Modular architecture \medskip
-                        % Modular -> Integrate with your existing tools
-                    \item API-aware authorization \medskip
-                        % L7 security -> More secure
-                    \item Scalability \medskip
-                        % Deploy more and bigger clusters
+                    \item Native eBPF dataplane \medskip
+                    \item Plumb connectivity \medskip
+                    \item Identity-based security \medskip
+                    \item Scalable \medskip
                 \end{itemize}
             \end{subtable}
             \begin{subtable}[r]{0.5\textwidth}
@@ -185,16 +168,43 @@ import{../sk-assign.c}
         \end{table}
     \end{frame}
 
-    \begin{frame}{Cluster events}
-        \begin{itemize}
-            \item Nodes $\rightarrow$ Fabric connectivity \medskip
-            \item \textbf<2>{Pods} $\rightarrow$ End-to-end connectivity \medskip
-            \item Services $\rightarrow$ Logical connectivity \medskip
-            \item \textbf<2>{Network policies} $\rightarrow$ Connectivity isolation \medskip
-        \end{itemize}
+    %\begin{frame}{Kubernetes networking plugins}
+    %    \begin{table}
+    %        \begin{subtable}[l]{0.6\textwidth}
+    %            \begin{itemize}
+    %                \item Plumb local connectivity (CNI) \medskip
+    %                \item Connect remote nodes \medskip
+    %                \item Services / loadbalancing \medskip
+    %                \item Network policy \medskip
+    %            \end{itemize}
+    %        \end{subtable}
+    %        \begin{subtable}[r]{0.35\textwidth}
+    %            \begin{figure}
+    %                \includesvg[width=0.4\textwidth,keepaspectratio]{cni-logo.svg}
+    %            \end{figure}
+    %        \end{subtable}
+    %    \end{table}
+    %    \blfootnote{{\tiny \url{https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/}}}
+    %\end{frame}
+
+    \begin{frame}{Kubernetes Architecture 101}
+        \centering
+        \vfill
+        \begin{figure}
+            \includesvg[width=0.8\textwidth,keepaspectratio]{k8s-architecture.svg}
+        \end{figure}
+        \vfill
+        \blfootnote{{\tiny Thomas Graf, {\em Scaling to 5k Kubernetes Nodes: Lessons Learned}, Cloud Native Rejekts EU 2019}}
     \end{frame}
 
-    \newsectionpage{Pod event processing}
+    %\begin{frame}{Cluster events}
+    %    \begin{itemize}
+    %        \item Nodes $\rightarrow$ Fabric connectivity \medskip
+    %        \item \textbf<2>{Pods} $\rightarrow$ End-to-end connectivity \medskip
+    %        \item Services $\rightarrow$ Logical connectivity \medskip
+    %        \item \textbf<2>{Network policies} $\rightarrow$ Connectivity isolation \medskip
+    %    \end{itemize}
+    %\end{frame}
 
     \begin{frame}{What does it mean to scale?}
         \begin{itemize}
@@ -203,10 +213,14 @@ import{../sk-assign.c}
                 \item Reduce load on centralized components \medskip
                 \item Minimize event sizes \medskip
             \end{itemize}
-            \item Roll out bursty workloads quickly \medskip
-            \item Reduce time from policy change to enforcement \medskip
+            \item Apply datapath changes quickly \medskip
+            \item Without consuming all available resources \medskip
+            %\item Roll out bursty workloads quickly \medskip
+            %\item Reduce time from policy change to enforcement \medskip
         \end{itemize}
     \end{frame}
+
+    \newsectionpage{Pod event processing}
 
     \begin{frame}{BPF plumbing}
         \centering
