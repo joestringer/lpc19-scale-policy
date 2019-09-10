@@ -149,16 +149,17 @@ import{../sk-assign.c}
         \vfill
         % k8s is our most common orchestrator integrations
         % The way k8s works is via centralized master
-        % 
+        %
         % how deploy pods
         % how deploy nodes
         % how setup connectivity?
         % how deploy policy
+        %
+        % Also determines scheduling, resource constraints (CPU, memory)
         \begin{figure}
             \includesvg[width=0.8\textwidth,keepaspectratio]{k8s-architecture.svg}
         \end{figure}
         \vfill
-        \blfootnote{{\tiny Thomas Graf, {\em Scaling to 5k Kubernetes Nodes: Lessons Learned}, Cloud Native Rejekts EU 2019}}
     \end{frame}
 
     \begin{frame}{Kubernetes networking plugins}
@@ -200,6 +201,7 @@ import{../sk-assign.c}
                 %        % Deploy more and bigger clusters
                 %\end{itemize}
                 \begin{itemize}
+                    \item Agent runs on each node \medskip
                     % BPF -> fast, programmable
                     \item Native eBPF dataplane \medskip
                     % Responsible for cni, node connectivity, services...
@@ -225,15 +227,6 @@ import{../sk-assign.c}
         \end{table}
     \end{frame}
 
-    %\begin{frame}{Cluster events}
-    %    \begin{itemize}
-    %        \item Nodes $\rightarrow$ Fabric connectivity \medskip
-    %        \item \textbf<2>{Pods} $\rightarrow$ End-to-end connectivity \medskip
-    %        \item Services $\rightarrow$ Logical connectivity \medskip
-    %        \item \textbf<2>{Network policies} $\rightarrow$ Connectivity isolation \medskip
-    %    \end{itemize}
-    %\end{frame}
-
     \begin{frame}{What does it mean to scale?}
         \begin{itemize}
             \item Manage cluster interactions \smallskip
@@ -251,6 +244,7 @@ import{../sk-assign.c}
             %\item Roll out bursty workloads quickly \medskip
             %\item Reduce time from policy change to enforcement \medskip
         \end{itemize}
+        \blfootnote{\tiny \url{https://cilium.io/blog/2019/04/24/cilium-15}}
     \end{frame}
 
     \newsectionpage{Deploying fast datapaths fast}
@@ -275,29 +269,11 @@ import{../sk-assign.c}
         \includegraphics[width=0.8\textwidth]{scaling_to_60k_pods.png}
     \end{frame}
 
-    \begin{frame}{Initial implementation}
-        \begin{itemize}
-            \item Treat ELF symbol table as a data table \medskip
-            \item Declare symbols for all static data (constants) \medskip
-            \item (hack) Cast desired static data symbol pointer to data \medskip
-            \item Update loader to place data into global symbol table offset \medskip
-        \end{itemize}
-    \end{frame}
-
-    \begin{frame}[fragile]{Upstream libbpf}
-        \begin{itemize}
-            \item Create maps for \verb+.bss+, \verb+.data+, \verb+.rodata+ \medskip
-            \item Relocate loads from static symbols to be map loads \medskip
-            \item Kernel-side, fix up to be direct load \medskip
-        \end{itemize}
-        \blfootnote{\tiny \url{https://lwn.net/ml/bpf/d406e2487f0dc1bf0326ed12e5e0cd0d17eae89c.1554314902.git.daniel@iogearbox.net/}}
-    \end{frame}
-
     \begin{frame}{Future directions}
         \centering
         \begin{itemize}
-            \item Load templates into the kernel \medskip
-            \item Support code path manipulation \medskip
+            \item Optimize verifier execution: $O(n) \rightarrow O(1)$ \medskip
+            \item Support code path templatization \medskip
         \end{itemize}
     \end{frame}
 
@@ -311,7 +287,6 @@ import{../sk-assign.c}
             \includesvg[width=\textwidth]{identity-security.svg}
         \end{figure}
         \vfill
-        \blfootnote{{\tiny Thomas Graf, {\em Cilium \& BPF - The Future of Networking and Security}, openSUSE Conference 2019}}
     \end{frame}
 
     %\begin{frame}{Policy model}
@@ -367,6 +342,7 @@ import{../sk-assign.c}
             \hline
         \end{tabularx}
         \vfill
+        \blfootnote{\tiny \url{https://cilium.io/blog/2019/08/20/cilium-16}}
     \end{frame}
 
     \begin{frame}{Datapath Configuration: Ingress}
@@ -447,6 +423,8 @@ import{../sk-assign.c}
 
     \begin{frame}{L7 is the new L4}
         \vfill
+        % Increasingly we see a lot of apps are written with the same protocols
+        % running on the same ports. L4 is no longer a differentiator.
         \includegraphics[width=\textwidth]{cilium_api_security.png}
         \vfill
     \end{frame}
@@ -463,6 +441,7 @@ import{../sk-assign.c}
         \end{overprint}
         \end{figure}
         \vfill
+        \blfootnote{\onslide<4-5>{\tiny cilium-agent --http-403-msg="..."}}
     \end{frame}
 
     \begin{frame}{Datapath Configuration: L3 flow}
@@ -561,12 +540,8 @@ import{../sk-assign.c}
         \end{overprint}
     \end{frame}
 
-    \begin{frame}[fragile]{Socket assign: RFC}
-        \centering
-        \lstinputlisting[language=c,%
-                         showstringspaces=false,%
-                         basicstyle=\scriptsize,%
-                         breaklines=true]{../sk-assign.c}
+    \begin{frame}{L7 Configuration: Socket redirect}
+        \includesvg[width=\textwidth]{bpf-proxy-demux-3.svg}
     \end{frame}
 
     \begin{frame}[fragile]{Socket assign: Hiccup}
@@ -581,18 +556,6 @@ import{../sk-assign.c}
         \end{itemize}
         \footnotetext[1]{\tiny \url{https://www.mail-archive.com/netdev@vger.kernel.org/msg303851.html}}
         \footnotetext[2]{\tiny \url{https://www.mail-archive.com/netdev@vger.kernel.org/msg304057.html}}
-    \end{frame}
-
-    \begin{frame}{L7 Configuration: Socket redirect}
-        \includesvg[width=\textwidth]{bpf-proxy-demux-3.svg}
-    \end{frame}
-
-    \begin{frame}[fragile]{Early demux}
-        \centering
-        \lstinputlisting[language=c,%
-                         showstringspaces=false,%
-                         basicstyle=\scriptsize,%
-                         breaklines=true]{../early-demux.c}
     \end{frame}
 
     \begin{frame}{Summary}
@@ -640,6 +603,22 @@ import{../sk-assign.c}
         \includesvg[width=\textwidth]{bpf-proxy-demux-3.svg}
     \end{frame}
 
+    \begin{frame}[fragile]{Early demux}
+        \centering
+        \lstinputlisting[language=c,%
+                         showstringspaces=false,%
+                         basicstyle=\scriptsize,%
+                         breaklines=true]{../early-demux.c}
+    \end{frame}
+
+    \begin{frame}[fragile]{Socket assign: RFC}
+        \centering
+        \lstinputlisting[language=c,%
+                         showstringspaces=false,%
+                         basicstyle=\scriptsize,%
+                         breaklines=true]{../sk-assign.c}
+    \end{frame}
+
     \begin{frame}[fragile]{Socket assign: API quirks}
         \centering
         \begin{itemize}
@@ -647,6 +626,25 @@ import{../sk-assign.c}
             \item Add \verb+bpf_skc_lookup_udp()+ \medskip
             \item Optimization: Add lookup flags to \verb+bpf_sk*_lookup_*()+ \medskip
         \end{itemize}
+    \end{frame}
+
+    \begin{frame}{ELF Templating: Initial implementation}
+        \begin{itemize}
+            \item Treat ELF symbol table as a data table \medskip
+            \item Declare symbols for all static data (constants) \medskip
+            \item (hack) Cast desired static data symbol pointer to data \medskip
+            \item Copy ELF, replacing values in symbol table with desired constants \medskip
+            \item Loader relocation copies the value from the symbol table into the instructions \medskip
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}[fragile]{ELF Templating: Upstream libbpf}
+        \begin{itemize}
+            \item Create maps for \verb+.bss+, \verb+.data+, \verb+.rodata+ \medskip
+            \item Relocate loads from static symbols to be map loads \medskip
+            \item Kernel-side, fix up to be direct load \medskip
+        \end{itemize}
+        \blfootnote{\tiny \url{https://lwn.net/ml/bpf/d406e2487f0dc1bf0326ed12e5e0cd0d17eae89c.1554314902.git.daniel@iogearbox.net/}}
     \end{frame}
     \backupend
 
